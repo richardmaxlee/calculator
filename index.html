@@ -14,6 +14,7 @@
     <div id='calculator'>
       <div id='display'></div>
       <button type='button' id='clear-button'>Clear</button>
+      <button type='button' id='backspace-button'>Del</button>
       <button type='button' class='operator' id='divide-button'>&#xf7</button>
       <button type='button' class='digit'>7</button>
       <button type='button' class='digit'>8</button>
@@ -38,59 +39,58 @@
 
 <script>
 
-  function add (a, b) {
-    return a + b;
-  }
-
-  function subtract (a, b) {
-    return a - b;
-  }
-
-  function multiply (a, b) {
-    return a * b;
-  }
-
-  function divide (a, b) {
-    return a / b;
-  }
-
   function operate (a, operator, b) {
     switch (operator) {
-      case '+': return add (a, b);
-      case '−': return subtract (a, b);
-      case '×': return multiply(a, b);
-      case '÷': return divide(a, b);
+      case '+': return a + b;
+      case '−': return a - b;
+      case '×': return a * b;
+      case '÷': return a / b;
     }
   }
 
   const digits = document.getElementsByClassName('digit');
   const operators = document.getElementsByClassName('operator')
   const display = document.getElementById('display')
-  document.getElementById('clear-button').addEventListener('click', () => {display.textContent = ""});
   let result;
   let expressionArray;
   let i;
 
-  document.getElementById('decimal-button').addEventListener('click', () => {
+  document.getElementById('clear-button').addEventListener('click', () => {display.textContent = ""});
+  document.getElementById('equal-button').addEventListener('click', calculateResult);
+  document.getElementById('decimal-button').addEventListener('click', decimalCheck);
+  document.getElementById('backspace-button').addEventListener('click', backspace);
+
+  function backspace() {
+    expressionArray = display.textContent.split('');
+    if (expressionArray[expressionArray.length - 1] === ' ') {
+      expressionArray = expressionArray.slice(0, -3);
+    }
+    else (expressionArray.pop())
+    display.textContent = expressionArray.join('');
+  }
+  
+  function decimalCheck() {
     expressionArray = display.textContent.split(' ');
     let lastElementArray = expressionArray[expressionArray.length - 1].split('');
     for (i = 0; i < lastElementArray.length; i++) {
       if (lastElementArray[i] === '.') return;
     }
     display.textContent += '.'
-  })
+  }
 
+  function initDigits() {
+    Array.from(digits).forEach(digit => digit.addEventListener('click', function(e) {
+      display.textContent += e.target.textContent;
+    }))
+  }
 
-  Array.from(digits).forEach(digit => digit.addEventListener('click', function(e) {
-    display.textContent += e.target.textContent;
-  }))
+  function initOperators() {
+    Array.from(operators).forEach(operator => operator.addEventListener('click', function(e) {
+      display.textContent += ` ${e.target.textContent} `;
+    }))
+  }
 
-  Array.from(operators).forEach(operator => operator.addEventListener('click', function(e) {
-    display.textContent += ` ${e.target.textContent} `;
-  }))
-
-
-  document.getElementById('equal-button').addEventListener('click', () => {
+  function calculateResult() {
     expressionArray = display.textContent.split(' ');
     for (i = 0; i < expressionArray.length; i++) {
       if (expressionArray[i] == '÷' || expressionArray[i] == '×') {
@@ -109,7 +109,10 @@
       }
     }
     display.textContent = expressionArray;
-  })
+  }
+
+  initDigits();
+  initOperators();
 
 </script>
 
