@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta charset="UTF-8"/>
+  <link href= "reset.css" rel= "stylesheet">
+  <link href = "main.css" rel = "stylesheet" >
+</head>
+
+<body>
+
+  <div id='wrapper'>
+    <div id='calculator'>
+      <div id='display'></div>
+      <button type='button' id='clear-button'>Clear</button>
+      <button type='button' class='operator' id='divide-button'>&#xf7</button>
+      <button type='button' class='digit'>7</button>
+      <button type='button' class='digit'>8</button>
+      <button type='button' class='digit'>9</button>
+      <button type='button' class='operator' id='multiply-button'>&#xd7</button>
+      <button type='button' class='digit'>4</button>
+      <button type='button' class='digit'>5</button>
+      <button type='button' class='digit'>6</button>
+      <button type='button' class='operator' id='subtract-button'>&#x2212</button>
+      <button type='button' class='digit'>1</button>
+      <button type='button' class='digit'>2</button>
+      <button type='button' class='digit'>3</button>
+      <button type='button' class='operator' id='add-button'>&#x2b</button>
+      <button type='button' class='digit' style='grid-column: 1/3;'>0</button>
+      <button type='button' id='decimal-button'>.</button>
+      <button type='button' id='equal-button'>&#x3d</button>
+    </div>
+  </div>
+  
+</body>
+
+
+<script>
+
+  function add (a, b) {
+    return a + b;
+  }
+
+  function subtract (a, b) {
+    return a - b;
+  }
+
+  function multiply (a, b) {
+    return a * b;
+  }
+
+  function divide (a, b) {
+    return a / b;
+  }
+
+  function operate (a, operator, b) {
+    switch (operator) {
+      case '+': return add (a, b);
+      case '−': return subtract (a, b);
+      case '×': return multiply(a, b);
+      case '÷': return divide(a, b);
+    }
+  }
+
+  const digits = document.getElementsByClassName('digit');
+  const operators = document.getElementsByClassName('operator')
+  const display = document.getElementById('display')
+  document.getElementById('clear-button').addEventListener('click', () => {display.textContent = ""});
+  let result;
+  let expressionArray;
+  let i;
+
+  document.getElementById('decimal-button').addEventListener('click', () => {
+    expressionArray = display.textContent.split(' ');
+    let lastElementArray = expressionArray[expressionArray.length - 1].split('');
+    for (i = 0; i < lastElementArray.length; i++) {
+      if (lastElementArray[i] === '.') return;
+    }
+    display.textContent += '.'
+  })
+
+
+  Array.from(digits).forEach(digit => digit.addEventListener('click', function(e) {
+    display.textContent += e.target.textContent;
+  }))
+
+  Array.from(operators).forEach(operator => operator.addEventListener('click', function(e) {
+    display.textContent += ` ${e.target.textContent} `;
+  }))
+
+
+  document.getElementById('equal-button').addEventListener('click', () => {
+    expressionArray = display.textContent.split(' ');
+    for (i = 0; i < expressionArray.length; i++) {
+      if (expressionArray[i] == '÷' || expressionArray[i] == '×') {
+        if (expressionArray[i+1] === '') return display.textContent;
+        result = operate(parseFloat(expressionArray[i-1]), expressionArray[i], parseFloat(expressionArray[i+1]));
+        expressionArray.splice([i-1], 3, result);
+        i--;
+      }
+    }
+    for (i = 0; i < expressionArray.length; i++) {
+      if (expressionArray[i] == '+' || expressionArray[i] == '−') {
+        if (expressionArray[i+1] === '') return display.textContent;
+        result = operate(parseFloat(expressionArray[i-1]), expressionArray[i], parseFloat(expressionArray[i+1]));
+        expressionArray.splice([i-1], 3, result);
+        i--;
+      }
+    }
+    display.textContent = expressionArray;
+  })
+
+</script>
+
+</html>
