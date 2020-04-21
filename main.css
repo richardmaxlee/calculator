@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  padding: 50px;
 }
 
 #calculator {
@@ -11,18 +11,29 @@
   grid-template-columns: repeat(4, 75px);
   gap: 10px;
   padding: 20px;
-  border: 1px solid black;
+  border: 2px solid #868991;
+  border-radius: 10px;
 }
 
 #display {
   grid-column: 1/5;
   grid-row: 1/3;
-  border: 1px solid black;
   padding: 10px;
   text-align: right;
+  border: 2px solid #4285f4;
+  border-radius: 10px;
+  font-size: 30px;
+  font-family: sans-serif;
 }
 
 #clear-button {
   grid-column: 1/3;
   text-align: center;
+}
+
+button {
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: sans-serif;
+  background-color: #f1f3f4;
 }
